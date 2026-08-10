@@ -22,7 +22,7 @@ The idea is simple:
 
 ---
 
-## 💡 The Problem
+## The Problem
 
 My note-taking system is where I capture information throughout the day, including:
 
@@ -47,7 +47,7 @@ AutoNotes started with a question:
 
 ---
 
-## 🎯 Project Objectives
+## Project Objectives
 
 I designed AutoNotes to:
 
@@ -67,7 +67,7 @@ Duplicate prevention is also being developed to prevent previously processed inf
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 AutoNotes follows a human-in-the-loop automation model.
 
@@ -95,7 +95,41 @@ Telegram Review
 
 ---
 
-## 🧠 Natural-Language Interpretation
+## Workflow Overview
+
+AutoNotes currently operates through two connected automation scenarios.
+
+### Scenario 1 — Note Processing
+
+The first scenario handles the initial note-processing pipeline.
+
+Notes are retrieved from the source, passed to Google Gemini for interpretation, converted into structured JSON, stored for later processing, and transformed into a Daily Brief.
+
+The Daily Brief is then delivered through Telegram for review.
+
+![AutoNotes Note Processing Workflow](screenshots/01-note-processing-workflow.png)
+
+### Scenario 2 — Approval & Execution
+
+The second scenario manages the interactive approval and execution process.
+
+Telegram responses are evaluated and routed through the appropriate **Approve, Edit, or Reject** path.
+
+Approved information continues through validation and application routing. Edit requests enter a separate revision workflow before being returned for another review. Rejected information is prevented from continuing.
+
+![AutoNotes Approval and Execution Workflow](screenshots/02-approval-execution-workflow.png)
+
+### Application Routing
+
+Once information is approved, the structured data is separated into its respective categories.
+
+Each category passes through its own iterator and validation logic before reaching the appropriate destination application.
+
+![AutoNotes Application Routing](screenshots/03-application-routing.png)
+
+---
+
+## Natural-Language Interpretation
 
 AutoNotes is designed around natural input.
 
@@ -117,7 +151,7 @@ Its responsibility is to understand natural-language input and convert it into p
 
 ---
 
-## 📦 Structured Data
+## Structured Data
 
 Instead of allowing AI-generated text to directly control downstream applications, AutoNotes converts interpreted information into structured JSON.
 
@@ -150,7 +184,7 @@ This gives the automation a predictable structure that can be parsed, validated,
 
 ---
 
-## 🙋🏽‍♀️ Human-in-the-Loop Approval
+## Human-in-the-Loop Approval
 
 I intentionally designed AutoNotes so that AI interpretation does not automatically result in actions being created.
 
@@ -174,7 +208,7 @@ This keeps me in control while still allowing AI to handle the interpretation an
 
 ---
 
-## ✏️ Conversational Editing
+## Conversational Editing
 
 The EDIT workflow allows corrections without restarting the entire process.
 
@@ -198,7 +232,7 @@ The workflow therefore supports an iterative approval cycle:
 
 ---
 
-## 🗃️ State Management
+## State Management
 
 AutoNotes uses Make.com Data Stores to maintain workflow state across separate Telegram interactions.
 
@@ -213,7 +247,7 @@ State management allows the workflow to determine whether an incoming Telegram m
 
 ---
 
-## 🛡️ Validation
+## Validation
 
 AI interpretation is followed by deterministic workflow validation.
 
@@ -245,7 +279,7 @@ This separates two important responsibilities:
 
 ---
 
-## 🔀 Application Routing
+## Application Routing
 
 After approval and validation, items are routed according to their intended action.
 
@@ -265,7 +299,7 @@ The workflow is designed to create external actions only when doing so provides 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -276,12 +310,12 @@ The workflow is designed to create external actions only when doing so provides 
 | Microsoft 365 Calendar | Calendar event creation |
 | Microsoft To Do | Tasks, reminders, shopping & goals |
 | Microsoft Excel | Expense tracking |
-| OneDrive | File storage |
+| OneDrive | Note source and file storage |
 | JSON | Structured data exchange |
 
 ---
 
-## 🧩 Engineering Challenges
+## Engineering Challenges
 
 ### Conversational State
 
@@ -315,7 +349,7 @@ The AI editing instructions therefore require the existing structure to be prese
 
 ---
 
-## 🔁 Duplicate Prevention
+## Duplicate Prevention
 
 **Status: In Development**
 
@@ -341,7 +375,7 @@ This feature is currently being implemented and tested.
 
 ---
 
-## 🚧 Project Status
+## Project Status
 
 AutoNotes is an active personal project.
 
@@ -384,7 +418,7 @@ AutoNotes is an active personal project.
 
 ---
 
-## 🔐 Privacy & Security
+## Privacy & Security
 
 AutoNotes interacts with personal productivity applications, so sensitive information is intentionally excluded from this repository.
 
@@ -405,7 +439,7 @@ All examples and screenshots published in this repository use sanitized or ficti
 
 ---
 
-## 📚 Concepts Demonstrated
+## Concepts Demonstrated
 
 This project explores:
 
@@ -426,7 +460,7 @@ This project explores:
 
 ---
 
-## 📌 Project Notes
+## Project Notes
 
 AutoNotes is a personal project that I am actively developing, testing, and improving.
 
