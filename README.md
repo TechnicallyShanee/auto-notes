@@ -1,4 +1,4 @@
-# AutoNotes 📝✨
+# AutoNotes
 
 ### AI-Powered Note-to-Action Automation
 
