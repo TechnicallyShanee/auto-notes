@@ -136,6 +136,44 @@ Once approved, each item is validated and routed according to its category:
 
 This separation allows AI to handle interpretation while deterministic workflow logic controls validation, routing, and execution.
 
+
+---
+
+## Example Workflow
+
+The following example demonstrates how AutoNotes transforms an unstructured handwritten note into organized, actionable information while keeping the user in control before any actions are executed.
+
+### 1. Handwritten Input
+
+The process begins with a handwritten note in Goodnotes. The user can write naturally without manually separating information into different applications or categories.
+
+![Goodnotes handwritten input](examples/01-goodnotes-input.png)
+
+### 2. AI-Generated Daily Brief
+
+After the Goodnotes backup is updated in OneDrive, the workflow retrieves the note and uses Google Gemini to interpret the content.
+
+The system identifies actionable information, determines relevant dates and context, categorizes the entries, and generates a structured Daily Brief for review in Telegram.
+
+![Generated Daily Brief](examples/02-generated-daily-brief.png)
+
+In this example, the handwritten entries were interpreted as calendar, task, reminder, shopping, health, and expense information.
+
+### 3. Human Approval
+
+Before any approved information is routed to connected applications, AutoNotes presents a human-in-the-loop approval checkpoint.
+
+![Human approval request](examples/03-human-approval-request.png)
+
+The user can:
+
+- **Approve** — continue to validation and application routing.
+- **Edit** — provide an edit instruction and receive a revised Daily Brief for another review.
+- **Reject** — stop the workflow without executing the proposed actions.
+
+This design keeps AI responsible for interpretation while the user retains control over execution.
+
+> **Demo note:** This example intentionally stops at the approval stage so test data is not written to the connected production applications.
 ---
 
 ## Workflow Overview
