@@ -232,6 +232,7 @@ Each category passes through its own iteration and validation logic before reach
 | **Microsoft 365 Calendar** | Receives approved calendar events |
 | **Microsoft To Do** | Receives approved reminders, tasks, shopping, wishlist, family, and goal items |
 | **Microsoft Excel** | Records approved expense information |
+
 ## Key Features
 
 - Natural-language interpretation of handwritten notes
@@ -420,23 +421,6 @@ After approval and validation, items are routed according to their intended acti
 The workflow determines the appropriate destination based on the structured category assigned during AI interpretation.
 
 Not every piece of information needs to leave the original note-taking environment. The workflow is designed to create external actions only when doing so provides value.
-
----
-
-## Tech Stack
-
-| Technology | Purpose |
-|---|---|
-| Goodnotes | Primary note-capture interface |
-| OneDrive | Automatic Goodnotes backup and source file storage |
-| Make.com | Workflow orchestration |
-| Google Gemini | Natural-language interpretation and structured output |
-| Telegram Bot | Daily Brief delivery, approval and conversational editing |
-| Make.com Data Stores | Workflow state and structured-data management |
-| Microsoft 365 Calendar | Calendar event creation |
-| Microsoft To Do | Tasks, reminders, shopping and goals |
-| Microsoft Excel | Expense tracking |
-| JSON | Structured data exchange between workflow stages |
 
 ---
 
