@@ -218,6 +218,37 @@ Each category passes through its own iteration and validation logic before reach
 
 ---
 
+## Technologies Used
+
+| Technology | Role in AutoNotes |
+|---|---|
+| **Goodnotes** | Captures handwritten notes and automatically backs up notebook files |
+| **Microsoft OneDrive** | Stores the Goodnotes backup and provides the source file monitored by the workflow |
+| **Make.com** | Orchestrates the automation, manages workflow logic, validation, routing, and application actions |
+| **Google Gemini** | Interprets natural-language note content and converts it into structured data |
+| **JSON** | Provides the structured data format used between AI interpretation and workflow processing |
+| **Make.com Data Store** | Maintains structured data and workflow state throughout the review process |
+| **Telegram Bot** | Delivers the Daily Brief and provides the human review interface |
+| **Microsoft 365 Calendar** | Receives approved calendar events |
+| **Microsoft To Do** | Receives approved reminders, tasks, shopping, wishlist, family, and goal items |
+| **Microsoft Excel** | Records approved expense information |
+## Key Features
+
+- Natural-language interpretation of handwritten notes
+- Automated processing of Goodnotes backups from OneDrive
+- AI-powered categorization of unstructured information
+- Structured JSON generation for downstream workflow processing
+- Automatically generated Daily Brief
+- Human-in-the-loop approval before action execution
+- Approve, edit, and reject workflow controls
+- AI-assisted revision of user-requested edits
+- Persistent workflow state using Make.com Data Stores
+- Category-specific validation and routing
+- Automated creation of calendar events, tasks, reminders, shopping items, wishlist items, family items, goals, and expense records
+- Separation of AI interpretation from deterministic workflow execution
+
+---
+
 ## Natural-Language Interpretation
 
 AutoNotes is designed around natural input.
