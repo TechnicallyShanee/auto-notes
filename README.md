@@ -116,6 +116,28 @@ This architecture allows Goodnotes to remain my primary note-taking environment 
 
 ---
 
+## System Architecture
+
+AutoNotes uses a multi-stage architecture that connects note capture, AI interpretation, human review, validation, and action execution.
+
+![AutoNotes System Architecture](diagrams/auto-notes-architecture.svg)
+
+The workflow begins in Goodnotes, where notes are automatically backed up to OneDrive. Make.com detects the updated backup file and retrieves it for processing. Google Gemini interprets the natural-language content and converts actionable information into structured data.
+
+The structured data and workflow state are maintained using Make.com Data Stores before a human-readable Daily Brief is generated and sent to Telegram.
+
+Telegram acts as the human-in-the-loop control layer. Proposed actions can be **approved, edited, or rejected** before anything is created in an external application. Edit requests are returned to Gemini for revision and sent back to Telegram for another review.
+
+Once approved, each item is validated and routed according to its category:
+
+- **Calendar** → Microsoft 365 Calendar
+- **Reminders, Tasks, Shopping, Wishlist, Family, and Goals** → Microsoft To Do
+- **Expenses** → Microsoft Excel / OneDrive
+
+This separation allows AI to handle interpretation while deterministic workflow logic controls validation, routing, and execution.
+
+---
+
 ## Workflow Overview
 
 AutoNotes currently operates through two connected automation scenarios.
