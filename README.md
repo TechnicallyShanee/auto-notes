@@ -8,17 +8,19 @@
 
 I love writing things down, but I don't love having to organize the same information again across multiple apps.
 
+I use Goodnotes as my primary note-taking application. My notebook is automatically backed up to OneDrive, which gives AutoNotes access to the latest version of my notes without requiring me to manually export or upload them each time.
+
 An appointment written in my notes still needs to be added to my calendar. Something I need to buy still needs to be added to my shopping list. A reminder still needs to be created somewhere else.
 
 I built **AutoNotes** to eliminate that duplicate work.
 
-AutoNotes is an AI-powered workflow that interprets everyday notes, identifies actionable information, converts it into structured data, and prepares it for the appropriate productivity application.
+AutoNotes monitors the Goodnotes backup stored in OneDrive, retrieves the updated note file, and uses AI to interpret its contents. Actionable information is converted into structured data and prepared for the appropriate productivity application.
 
 Before anything is created, the system sends me a Daily Brief through Telegram where I can **Approve, Edit, or Reject** the proposed actions.
 
 The idea is simple:
 
-**Capture once → AI interprets → I review → Automation executes.**
+**Write in Goodnotes → Automatic OneDrive backup → AI interprets → I review → Automation executes.**
 
 ---
 
@@ -39,7 +41,13 @@ The problem wasn't capturing information.
 
 The problem was everything that had to happen **after** I captured it.
 
-I was still manually transferring information from my notes into calendars, task lists, shopping lists, trackers, and other applications.
+If I wrote an appointment in Goodnotes, I still had to manually create the calendar event.
+
+If I wrote something I needed to buy, I still had to add it to my shopping list.
+
+If I wrote down something I needed to remember, I still had to create the appropriate reminder or task.
+
+I was essentially recording the same information twice.
 
 AutoNotes started with a question:
 
@@ -51,8 +59,10 @@ AutoNotes started with a question:
 
 I designed AutoNotes to:
 
-- Accept naturally written notes without requiring rigid formatting
-- Use AI to understand the intent behind each note
+- Allow me to continue taking notes naturally in Goodnotes
+- Use the existing Goodnotes backup in OneDrive as the source for automation
+- Detect updated note files without requiring a manual upload
+- Use AI to understand the intent behind naturally written notes
 - Convert unstructured information into structured JSON
 - Categorize actionable information
 - Generate a human-readable Daily Brief
@@ -72,7 +82,16 @@ Duplicate prevention is also being developed to prevent previously processed inf
 AutoNotes follows a human-in-the-loop automation model.
 
 ```text
-Daily Notes
+Goodnotes
+     │
+     ▼
+Automatic OneDrive Backup
+     │
+     ▼
+Detect Updated Note File
+     │
+     ▼
+Retrieve File
      │
      ▼
 AI Interpretation
@@ -93,6 +112,8 @@ Telegram Review
      └──── REJECT ─────► Stop
 ```
 
+This architecture allows Goodnotes to remain my primary note-taking environment while OneDrive acts as the bridge between my notes and the automation workflow.
+
 ---
 
 ## Workflow Overview
@@ -101,11 +122,15 @@ AutoNotes currently operates through two connected automation scenarios.
 
 ### Scenario 1 — Note Processing
 
-The first scenario handles the initial note-processing pipeline.
+The first scenario connects my Goodnotes note-taking workflow to AutoNotes.
 
-Notes are retrieved from the source, passed to Google Gemini for interpretation, converted into structured JSON, stored for later processing, and transformed into a Daily Brief.
+Goodnotes automatically backs up my notebook to OneDrive. AutoNotes monitors the designated OneDrive location for updates and retrieves the latest backed-up note file when a change is detected.
 
-The Daily Brief is then delivered through Telegram for review.
+The file is then passed to Google Gemini for interpretation. Gemini identifies actionable information and converts the unstructured note content into structured data.
+
+The response is parsed as JSON, stored for later processing, and transformed into a human-readable Daily Brief.
+
+The Daily Brief is then delivered through Telegram for review before any external actions are created.
 
 ![AutoNotes Note Processing Workflow](screenshots/01-note-processing-workflow.png)
 
@@ -115,7 +140,11 @@ The second scenario manages the interactive approval and execution process.
 
 Telegram responses are evaluated and routed through the appropriate **Approve, Edit, or Reject** path.
 
-Approved information continues through validation and application routing. Edit requests enter a separate revision workflow before being returned for another review. Rejected information is prevented from continuing.
+Approved information continues through validation and application routing.
+
+Edit requests enter a separate revision workflow where the requested changes are interpreted and applied before an updated Daily Brief is returned for another review.
+
+Rejected information is prevented from continuing through the workflow.
 
 ![AutoNotes Approval and Execution Workflow](screenshots/02-approval-execution-workflow.png)
 
@@ -123,7 +152,7 @@ Approved information continues through validation and application routing. Edit 
 
 Once information is approved, the structured data is separated into its respective categories.
 
-Each category passes through its own iterator and validation logic before reaching the appropriate destination application.
+Each category passes through its own iteration and validation logic before reaching the appropriate destination application.
 
 ![AutoNotes Application Routing](screenshots/03-application-routing.png)
 
@@ -133,7 +162,7 @@ Each category passes through its own iterator and validation logic before reachi
 
 AutoNotes is designed around natural input.
 
-I don't need to manually label information before writing it.
+I don't need to manually label or structure information before writing it in Goodnotes.
 
 For example:
 
@@ -147,7 +176,9 @@ For example:
 
 Google Gemini acts as the interpretation layer.
 
-Its responsibility is to understand natural-language input and convert it into predictable structured data that the workflow can process.
+Its responsibility is to understand the natural-language input and convert it into predictable structured data that the rest of the workflow can process.
+
+This allows me to focus on capturing information naturally instead of changing the way I take notes to accommodate the automation.
 
 ---
 
@@ -245,6 +276,8 @@ Example states include:
 
 State management allows the workflow to determine whether an incoming Telegram message is a new command, an editing instruction, or part of an existing approval process.
 
+This is particularly important because Telegram interactions occur separately from the original note-processing scenario.
+
 ---
 
 ## Validation
@@ -293,9 +326,9 @@ After approval and validation, items are routed according to their intended acti
 | Family tasks | Microsoft To Do |
 | Expenses | Microsoft Excel / OneDrive |
 
-Not every piece of information needs to leave the original note-taking environment.
+The workflow determines the appropriate destination based on the structured category assigned during AI interpretation.
 
-The workflow is designed to create external actions only when doing so provides value.
+Not every piece of information needs to leave the original note-taking environment. The workflow is designed to create external actions only when doing so provides value.
 
 ---
 
@@ -303,23 +336,34 @@ The workflow is designed to create external actions only when doing so provides 
 
 | Technology | Purpose |
 |---|---|
+| Goodnotes | Primary note-capture interface |
+| OneDrive | Automatic Goodnotes backup and source file storage |
 | Make.com | Workflow orchestration |
-| Google Gemini | Natural-language interpretation & structured output |
-| Telegram Bot | Approval & conversational editing interface |
-| Make.com Data Stores | Workflow state management |
+| Google Gemini | Natural-language interpretation and structured output |
+| Telegram Bot | Daily Brief delivery, approval and conversational editing |
+| Make.com Data Stores | Workflow state and structured-data management |
 | Microsoft 365 Calendar | Calendar event creation |
-| Microsoft To Do | Tasks, reminders, shopping & goals |
+| Microsoft To Do | Tasks, reminders, shopping and goals |
 | Microsoft Excel | Expense tracking |
-| OneDrive | Note source and file storage |
-| JSON | Structured data exchange |
+| JSON | Structured data exchange between workflow stages |
 
 ---
 
 ## Engineering Challenges
 
+### Connecting Goodnotes to the Automation
+
+Goodnotes is where I wanted to continue taking my notes, so the automation needed to work around my existing note-taking process rather than requiring me to move to another application.
+
+I used the automatic Goodnotes backup stored in OneDrive as the bridge between my note-taking environment and the automation.
+
+This allows AutoNotes to access updated note files without requiring a separate manual export or upload each time.
+
 ### Conversational State
 
-Telegram messages arrive as separate events. The workflow therefore needed a way to determine whether a message represented a new command or a continuation of an existing interaction.
+Telegram messages arrive as separate events.
+
+The workflow therefore needed a way to determine whether a message represented a new command or a continuation of an existing interaction.
 
 I introduced persistent workflow states to distinguish between pending approvals and edit instructions.
 
@@ -353,7 +397,9 @@ The AI editing instructions therefore require the existing structure to be prese
 
 **Status: In Development**
 
-Because source notes may continue to contain information that has already been processed, AutoNotes needs to distinguish between new and previously handled items.
+Because the Goodnotes backup can continue to contain information that has already been processed, AutoNotes needs to distinguish between new and previously handled items.
+
+Without duplicate prevention, an existing appointment, reminder, or shopping item could potentially be interpreted again during a later run.
 
 The planned approach uses deterministic item identifiers and a processed-item ledger.
 
@@ -381,6 +427,10 @@ AutoNotes is an active personal project.
 
 ### Implemented
 
+- Goodnotes note capture
+- Automatic Goodnotes backup through OneDrive
+- OneDrive source monitoring
+- Automated retrieval of updated note files
 - Natural-language note interpretation
 - AI-generated structured output
 - JSON parsing
@@ -413,14 +463,14 @@ AutoNotes is an active personal project.
 - Habit tracking
 - Enhanced conflict detection
 - Confidence-based review
-- Reporting & analytics
+- Reporting and analytics
 - Additional productivity integrations
 
 ---
 
 ## Privacy & Security
 
-AutoNotes interacts with personal productivity applications, so sensitive information is intentionally excluded from this repository.
+AutoNotes interacts with personal notes and productivity applications, so sensitive information is intentionally excluded from this repository.
 
 This repository does **not** contain:
 
@@ -430,7 +480,7 @@ This repository does **not** contain:
 - Webhook URLs
 - Microsoft credentials
 - Gemini credentials
-- Personal notes
+- Personal Goodnotes content
 - Real calendar information
 - Personal financial information
 - Private account identifiers
@@ -453,10 +503,12 @@ This project explores:
 - Data validation
 - State management
 - Human-in-the-loop AI
-- Application integrations
+- Application integration
+- Cross-platform workflow design
 - Error handling
 - Process improvement
 - Requirements-driven solution design
+- Workflow troubleshooting
 
 ---
 
@@ -464,6 +516,8 @@ This project explores:
 
 AutoNotes is a personal project that I am actively developing, testing, and improving.
 
-The project started as a solution to an everyday problem: reducing the amount of repetitive work required after taking notes.
+The project started as a solution to an everyday problem: I wanted to continue taking notes naturally in Goodnotes without having to manually reorganize the same information across several applications afterward.
+
+By using the automatic Goodnotes backup in OneDrive as the entry point for the workflow, I was able to keep my existing note-taking process while adding an automation layer around it.
 
 As the project develops, I will continue documenting the architecture, challenges, improvements, and lessons learned in this repository.
